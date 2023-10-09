@@ -1,42 +1,77 @@
 
 // vocal, drum, bass, and other are volumes ranging from 0 to 100
 let oldDrum;
+let cat0;
+let cat1;
+let cat2;
+let cat3;
+let cat4;
+let cat5;
+let Cat = [];
+let firstRun = true
+let catSwitch = 0;
+
 function draw_one_frame(words, vocal, drum, bass, other, counter) {
 
+  if (firstRun){
+    rectMode(CENTER);
+    imageMode(CENTER);
+    cat0 = loadImage('Cat/Cat_0.png');
+    cat1 = loadImage('Cat/Cat_1.png');
+    cat2 = loadImage('Cat/Cat_2.png');
+    cat3 = loadImage('Cat/Cat_3.png');
+    cat4 = loadImage('Cat/Cat_4.png');
+    cat5 = loadImage('Cat/Cat_5.png');
+    
+    Cat[0] = cat0;
+    Cat[1] = cat1;
+    Cat[2] = cat2;
+    Cat[3] = cat3;
+    Cat[4] = cat4;
+    Cat[5] = cat5;
+
+  firstRun = false;
+  }
+
   background(0);
+
   let drumHight = map(drum, 0, 100, 0, height); //change the last two value
   let vocalHight = map(vocal, 0, 100, 0, height);
   let bassHight = map(bass, 0, 100, 0, height);
   let DrumChangeSpeed = map(drum-oldDrum, -10, 10, -1, 1);
-  
-  let Cat = [];
-  function draw_one_frame(vocal, drum, bass, other){
-    if (firstRun){
-      rectMode(CENTER);
-      Cat.push(loadImage('Cat_0.png'));
-      Cat.push(loadImage('Cat_1.png'));
-      Cat.push(loadImage('Cat_2.png'));
-      Cat.push(loadImage('Cat_3.png'));
-      fistRun = false;
-    }
-
+    
     var VocalFrame = int(map(vocal, 0,100, 0,4));
-    console.log(VocalFrame);
-    push();
-    scale(0.5);
-    image(Cat[VocalFrame], width/2, height/2);
-    pop();
-  }
-
+  
 //new stuff here
 
   drumBall(100, drumHight, 15, 15+20*DrumChangeSpeed, words, vocal, drum, bass, other, counter);
-  vocalBall(70, vocalHight-30, 15, 15+20*DrumChangeSpeed, words, vocal, drum, bass, other, counter);
+  drumBall(400, drumHight, 15, 15+20*DrumChangeSpeed, words, vocal, drum, bass, other, counter);
   
+  vocalBall(70, vocalHight-30, 15, 15+20*DrumChangeSpeed, words, vocal, drum, bass, other, counter);
+  vocalBall(430, vocalHight-30, 15, 15+20*DrumChangeSpeed, words, vocal, drum, bass, other, counter);
   
   bassBall(50, bassHight, 15, 15, words, vocal, drum, bass, other, counter);
   bassBall(480, bassHight, 15, 15, words, vocal, drum, bass, other, counter);
 
+  star(7,10, 300,100, words, vocal, drum, bass, other, counter);
+  star(3,6, 400,400, words, vocal, drum, bass, other, counter);
+
+//____________________________________________________________________________________________________
+
+  if(counter % 10 == 0 && counter != 0){
+    catSwitch++
+    if (catSwitch>5){
+      catSwitch = 0;
+    }
+  }
+
+  push();
+  scale(0.22);
+  image(Cat[catSwitch], 1150, 1150);
+  pop();
+
+//Cat__________________________________________________________________________________________________
+  
   oldDrum = drum;
 
   textAlign(CENTER);
@@ -87,6 +122,11 @@ for(let i=1; i <= vocalMap1; i++){
   line(step1, start2, step1, end2);
 }
 
+for(let i=0; i >= -vocalMap1; i--){
+  let step1 = i*10;
+  line(step1+width, start2+320, step1+width, end2+320);
+}
+
 //vocal line_______________________________________________________________________________________________________
 
 strokeWeight(2);
@@ -114,6 +154,7 @@ strokeWeight(2);
     rotate(360/90)
   }
   pop();
+
 }
 //drum cicle_______________________________________________________________________________________________________
 
@@ -163,7 +204,7 @@ function vocalBall(x, y, sizeX, sizeY, words, vocal, drum, bass, other, counter)
   noFill();
   ellipse(x, y, sizeX, sizeY);
 }
-//vocal ball (ball2)________________________________________________________________________
+//vocal ball (ball2)_______________________________________________________________________
 
 function bassBall(x, y, sizeX, sizeY, words, vocal, drum, bass, other, counter) {
   let startColour1 = color(255, 204, 0);
@@ -188,3 +229,71 @@ function bassBall(x, y, sizeX, sizeY, words, vocal, drum, bass, other, counter) 
 }
 //bass ball (ball3)________________________________________________________________________
 
+function star(size2, size3, place2, place3, words, vocal, drum, bass, other, counter) {
+  let startColour3 = color(255);
+  let endColour3 = color(0);
+  let startColour4 = color(100);
+  
+  let mapForColour3; 
+  let mappedColour3;
+
+  if (other < 50){
+    mapForColour3 = map(other, 0, 50, 0, 1);
+    mappedColour3 = lerpColor(startColour3, endColour3, mapForColour3);
+  } 
+  else {
+    mapForColour3 = map(other, 50, 100, 0, 1);
+    mappedColour3 = lerpColor(endColour3, startColour4, mapForColour3);
+  }
+
+  push();
+  translate(place2, place3);
+  scale(size2, size3);
+
+  stroke(mappedColour3);
+  strokeWeight(1);
+  fill(mappedColour3);
+
+  beginShape();
+  curveVertex(0,0);
+  curveVertex(0,0);
+  curveVertex(-2, 13);
+  curveVertex(-6, 20);
+  curveVertex(-14, 22);
+  curveVertex(0, 22);
+  curveVertex(0, 22);
+  endShape();
+
+  beginShape();
+  curveVertex(0, 22);
+  curveVertex(0, 22);
+  curveVertex(0,0);
+  curveVertex(2, 13);
+  curveVertex(6, 20);
+  curveVertex(14, 22);
+  curveVertex(14, 22);
+  endShape();
+
+  beginShape();
+  curveVertex(0, 22);
+  curveVertex(0, 22);
+  curveVertex(-14, 22);
+  curveVertex(-6, 24);
+  curveVertex(-2, 31);
+  curveVertex(0, 44);
+  curveVertex(0, 44);
+  endShape();
+  
+  beginShape();
+  curveVertex(0, 22);
+  curveVertex(0, 22);
+  curveVertex(14, 22);
+  curveVertex(6, 24);
+  curveVertex(2, 31);
+  curveVertex(0, 44);
+  curveVertex(0, 44);
+  endShape();
+
+  pop();
+}
+//star__________________________________________________________________________________________

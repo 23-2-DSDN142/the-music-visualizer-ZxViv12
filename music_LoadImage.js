@@ -4,7 +4,7 @@ let testImg;
 function draw_one_frame(words, vocal, drum, bass, other, counter) {
   if(firstRun){
     rectMode(CENTER);
-    testImg = loadImage('test.png');
+    testImg = loadImage('catTest.png');
 
     firstRun = false
   }
